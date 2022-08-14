@@ -1,4 +1,5 @@
 import requests
+import os
 from requests.exceptions import HTTPError
 from playsound import playsound
 
