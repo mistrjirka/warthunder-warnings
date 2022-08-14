@@ -1,52 +1,63 @@
 import requests
 from requests.exceptions import HTTPError
+from playsound import playsound
+
 from time import sleep
 url="http://localhost:8111/state"
 url2="http://localhost:8111/indicators"
-aoa_treshold = 10
-gear_speed_treshold = 300
-g_treshold = 2
+aoa_treshold = 20
+gear_speed_treshold = 340
+g_treshold = 8
 speed_treshold = 1100
 flaps_treshold = 700
-altitude_treshold = 200
-altitude_terrain = 150
+altitude_treshold = 300
+altitude_terrain = 200
 pitch_treshold = 10
 
 def check_aoa(json_tel):
     if json_tel["AoA, deg"] > aoa_treshold:
+        print("AOA")
         return True
     else: 
         return False
 
 def check_gear_speed(json_tel):
-    if json_tel["gear, %"] > 0 and json_tel["TAS, km/h"]>gear_speed_treshold:
+    if json_tel["gear, %"] > 0.5 and json_tel["TAS, km/h"]>gear_speed_treshold:
+        print("gear speed")
         return True
     else: 
         return False
 
 def check_speed(json_tel):
     if json_tel["TAS, km/h"]>speed_treshold:
+        print("speed")
         return True
     else: 
         return False
 def check_flaps_speed(json_tel):
-    if json_tel["flaps, %"] > 0 and json_tel["TAS, km/h"]>flaps_treshold:
+    print(json_tel["flaps"],  " ", json_tel["TAS, km/h"])
+    if json_tel["flaps"] > 0.6 and json_tel["TAS, km/h"]>flaps_treshold:
+        print("flaps speed")
         return True
     else: 
         return False
 
 def check_terrain(json_tel):
-    if json_tel["altitude_min"]<altitude_terrain and json_tel["aviahorizon_pitch"] > pitch_treshold:
+    if feetToMeters(json_tel["altitude_hour"])<altitude_terrain and json_tel["aviahorizon_pitch"] > pitch_treshold:
+        print("terrain")
         return True
     else: 
         return False
 def check_altitude(json_tel):
-    if json_tel["altitude_min"]<altitude_altitude and json_tel["aviahorizon_pitch"] > pitch_treshold:
+    print(feetToMeters(json_tel["altitude_hour"]), " ", json_tel["altitude_min"])
+    if feetToMeters(json_tel["altitude_hour"])<altitude_treshold and json_tel["aviahorizon_pitch"] > pitch_treshold:
+        print("altitude_min")
         return True
     else: 
         return False
 def check_g(json_tel):
     if json_tel["g_meter"]>g_treshold:
+        print("gforce")
         return True
     else: 
         return False
@@ -101,12 +112,13 @@ while True:
         state = stateResponse.json()
         indicators.update(state)
         telemetry = indicators
-        print("Entire JSON response")
-        print(telemetry)
-        for warn in yell_warnings:
-            if warn["check"]():
-                print(playing)
-                playsound(warn["sound"])
+        #print("Entire JSON response")
+        #print(telemetry)
+        if "altitude_min" in telemetry:
+            for warn in yell_warnings:
+                if warn["check"](telemetry):
+                    print("playing")
+                    playsound(warn["sound"])
 
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
