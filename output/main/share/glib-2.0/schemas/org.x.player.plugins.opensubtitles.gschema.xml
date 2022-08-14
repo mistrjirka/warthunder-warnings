@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+	<schema path="/org/x/player/opensubtitles/" id="org.x.player.plugins.opensubtitles" gettext-domain="xplayer">
+		<key type="s" name="language">
+			<default>''</default>
+			<summary>Subtitle language</summary>
+			<description>The language to search for subtitles for movies in.</description>
+		</key>
+	</schema>
+</schemalist>

@@ -10,12 +10,12 @@ gear_speed_treshold = 340
 g_treshold = 8
 speed_treshold = 1100
 flaps_treshold = 700
-altitude_treshold = 300
-altitude_terrain = 200
+altitude_treshold = 600
+altitude_terrain = 400
 pitch_treshold = 10
 
 def check_aoa(json_tel):
-    if json_tel["AoA, deg"] > aoa_treshold:
+    if json_tel["AoA, deg"] > aoa_treshold and json_tel["TAS, km/h"]> 50:
         print("AOA")
         return True
     else: 
@@ -56,6 +56,12 @@ def check_altitude(json_tel):
     else: 
         return False
 def check_g(json_tel):
+    if json_tel["g_meter"]>g_treshold:
+        print("gforce")
+        return True
+    else: 
+        return False
+def check_fuel(json_tel):
     if json_tel["g_meter"]>g_treshold:
         print("gforce")
         return True
