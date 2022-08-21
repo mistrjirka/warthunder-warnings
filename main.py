@@ -101,12 +101,12 @@ yell_warnings = [{
 {
     "check": check_altitude,
     "playing": False,
-    "sound": "./sounds/altitude.mp3"
+    "sound": "./sounds/altitude.wav"
 },
 {
     "check": check_terrain,
     "playing": False,
-    "sound": "./sounds/pullup.mp3"
+    "sound": "./sounds/pullup.wav"
 },
 {
     "check": check_g,
