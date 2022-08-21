@@ -6,5 +6,5 @@ cd \
 cd \python%python_ver%\Scripts\
 pip install playsound
 pip install requests
-
+pip install pydub
 pause
