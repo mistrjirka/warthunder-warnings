@@ -136,7 +136,7 @@ while True:
             for warn in yell_warnings:
                 if warn["check"](telemetry):
                     print("playing")
-                    winsound.PlaySound(warn["sound"], winsound.PlaySound()
+                    winsound.PlaySound(warn["sound"], winsound.SND_FILENAME)
 
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
