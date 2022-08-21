@@ -1,11 +1,12 @@
 import requests
-import os
 from requests.exceptions import HTTPError
-from playsound import playsound
+from pydub import AudioSegment
+from pydub.playback import play
 
 from time import sleep
 url="http://localhost:8111/state"
 url2="http://localhost:8111/indicators"
+
 aoa_treshold = 20
 gear_speed_treshold = 340
 g_treshold = 8
@@ -14,7 +15,18 @@ flaps_treshold = 700
 altitude_treshold = 600
 altitude_terrain = 400
 pitch_treshold = 10
+flaps_treshhold_percent = 0.6
+"""
+aoa_treshold = 20
+gear_speed_treshold = 280
+g_treshold = 5
+speed_treshold = 800
+flaps_treshold = 350
+altitude_treshold = 500
+altitude_terrain = 300
+pitch_treshold = 15
 
+"""
 def check_aoa(json_tel):
     if json_tel["AoA, deg"] > aoa_treshold and json_tel["TAS, km/h"]> 50:
         print("AOA")
@@ -37,7 +49,7 @@ def check_speed(json_tel):
         return False
 def check_flaps_speed(json_tel):
     print(json_tel["flaps"],  " ", json_tel["TAS, km/h"])
-    if json_tel["flaps"] > 0.6 and json_tel["TAS, km/h"]>flaps_treshold:
+    if json_tel["flaps"] > flaps_treshhold_percent and json_tel["TAS, km/h"]>flaps_treshold:
         print("flaps speed")
         return True
     else: 
@@ -52,7 +64,7 @@ def check_terrain(json_tel):
 def check_altitude(json_tel):
     print(feetToMeters(json_tel["altitude_hour"]), " ", json_tel["altitude_min"])
     if feetToMeters(json_tel["altitude_hour"])<altitude_treshold and json_tel["aviahorizon_pitch"] > pitch_treshold:
-        print("altitude_min")
+        print("altitude_hour")
         return True
     else: 
         return False
@@ -125,7 +137,12 @@ while True:
             for warn in yell_warnings:
                 if warn["check"](telemetry):
                     print("playing")
-                    playsound(warn["sound"])
+                    if "mp3" in warn["sound"]:
+                        song = AudioSegment.from_mp3(warn["sound"])
+                        play(song)
+                    else:
+                        song = AudioSegment.from_wav(warn["sound"])
+                        play(song)
 
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
