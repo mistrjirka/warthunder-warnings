@@ -1,7 +1,6 @@
 import requests
 from requests.exceptions import HTTPError
-from pydub import AudioSegment
-from pydub.playback import play
+from playsound import playsound
 
 from time import sleep
 url="http://localhost:8111/state"
@@ -25,7 +24,7 @@ flaps_treshold = 350
 altitude_treshold = 500
 altitude_terrain = 300
 pitch_treshold = 15
-
+flaps_treshhold_percent = 0.19
 """
 def check_aoa(json_tel):
     if json_tel["AoA, deg"] > aoa_treshold and json_tel["TAS, km/h"]> 50:
@@ -137,12 +136,7 @@ while True:
             for warn in yell_warnings:
                 if warn["check"](telemetry):
                     print("playing")
-                    if "mp3" in warn["sound"]:
-                        song = AudioSegment.from_mp3(warn["sound"])
-                        play(song)
-                    else:
-                        song = AudioSegment.from_wav(warn["sound"])
-                        play(song)
+                    playsound(warn["sound"])
 
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
