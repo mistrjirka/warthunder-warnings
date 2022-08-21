@@ -1,6 +1,6 @@
 import requests
 from requests.exceptions import HTTPError
-from playsound import playsound
+import winsound
 
 from time import sleep
 url="http://localhost:8111/state"
@@ -136,7 +136,7 @@ while True:
             for warn in yell_warnings:
                 if warn["check"](telemetry):
                     print("playing")
-                    playsound(warn["sound"])
+                    winsound.PlaySound(warn["sound"], winsound.PlaySound()
 
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
