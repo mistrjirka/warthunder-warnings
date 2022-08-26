@@ -15,6 +15,7 @@ altitude_treshold = 600
 altitude_terrain = 400
 pitch_treshold = 10
 flaps_treshhold_percent = 0.6
+minimum_speed_treshold = 333
 """
 aoa_treshold = 20
 gear_speed_treshold = 280
@@ -79,6 +80,12 @@ def check_fuel(json_tel):
         return True
     else: 
         return False
+def check_minimum_speed(json_tel):
+    if json_tel["gear, %"] > 0.5 and json_tel["TAS, km/h"]<gear_speed_treshold:
+        print("gear speed")
+        return True
+    else: 
+        return False
 yell_warnings = [{
     "check": check_aoa,
     "playing": False,
@@ -112,6 +119,11 @@ yell_warnings = [{
     "check": check_g,
     "playing": False,
     "sound": "./sounds/OverG.wav"
+},
+{
+    "check": check_minimum_speed,
+    "playing": False,
+    "sound": "./sounds/minimumspeed.wav"
 }
 ]
 
