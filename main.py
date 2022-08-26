@@ -81,7 +81,7 @@ def check_fuel(json_tel):
     else: 
         return False
 def check_minimum_speed(json_tel):
-    if json_tel["gear, %"] > 0.5 and json_tel["TAS, km/h"]<gear_speed_treshold:
+    if json_tel["gear, %"] < 0.5 and json_tel["TAS, km/h"]<gear_speed_treshold:
         print("gear speed")
         return True
     else: 
